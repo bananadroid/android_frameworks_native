@@ -745,6 +745,7 @@ public:
     void logFrameStats();
     void getFrameStats(FrameStats* outStats) const;
     void onDisconnect();
+    virtual void onConfigurationChanged() {}
 
     ui::Transform getTransform() const;
     bool isTransformValid() const;
