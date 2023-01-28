@@ -820,8 +820,8 @@ void SurfaceFlinger::init() {
 
     enableLatchUnsignaledConfig = getLatchUnsignaledConfig();
 
-    mAllowHwcForWFD = base::GetBoolProperty("vendor.display.vds_allow_hwc"s, false);
-    mAllowHwcForVDS = mAllowHwcForWFD && base::GetBoolProperty("debug.sf.enable_hwc_vds"s, false);
+    mAllowHwcForWFD = base::GetBoolProperty("vendor.display.vds_allow_hwc"s, true);
+    mAllowHwcForVDS = mAllowHwcForWFD && base::GetBoolProperty("debug.sf.enable_hwc_vds"s, true);
     mFirstApiLevel = android::base::GetIntProperty("ro.product.first_api_level", 0);
 
     // Process any initial hotplug and resulting display changes.
