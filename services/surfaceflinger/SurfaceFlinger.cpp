@@ -431,7 +431,7 @@ SurfaceFlinger::SurfaceFlinger(Factory& factory) : SurfaceFlinger(factory, SkipI
     property_get("debug.sf.predict_hwc_composition_strategy", value, "1");
     mPredictCompositionStrategy = atoi(value);
 
-    property_get("debug.sf.treat_170m_as_sRGB", value, "0");
+    property_get("debug.sf.treat_170m_as_sRGB", value, "1");
     mTreat170mAsSrgb = atoi(value);
 
     property_get("ro.sf.force_hwc_brightness", value, "0");
