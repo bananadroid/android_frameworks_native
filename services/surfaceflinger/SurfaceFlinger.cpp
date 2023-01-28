@@ -398,7 +398,7 @@ SurfaceFlinger::SurfaceFlinger(Factory& factory) : SurfaceFlinger(factory, SkipI
     int debugDdms = atoi(value);
     ALOGI_IF(debugDdms, "DDMS debugging not supported");
 
-    property_get("debug.sf.disable_backpressure", value, "0");
+    property_get("debug.sf.disable_backpressure", value, "1");
     mPropagateBackpressure = !atoi(value);
     ALOGI_IF(!mPropagateBackpressure, "Disabling backpressure propagation");
 
