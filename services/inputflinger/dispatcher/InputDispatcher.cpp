@@ -1907,6 +1907,7 @@ bool InputDispatcher::dispatchMotionLocked(nsecs_t currentTime, std::shared_ptr<
                 isPointerEvent ? CancelationOptions::Mode::CANCEL_POINTER_EVENTS
                                : CancelationOptions::Mode::CANCEL_NON_POINTER_EVENTS);
         CancelationOptions options(mode, "input event injection failed");
+        options.displayId = entry->displayId;
         synthesizeCancelationEventsForMonitorsLocked(options);
         return true;
     }
@@ -3999,6 +4000,14 @@ void InputDispatcher::synthesizeCancelationEventsForConnectionLocked(
         const WindowInfo* windowInfo = windowHandle->getInfo();
         target.setDefaultPointerTransform(windowInfo->transform);
         target.globalScaleFactor = windowInfo->globalScaleFactor;
+    } else if (connection->monitor) {
+        // The global monitor is not associated with any WindowInfo, so we need to use the
+        // transform of the display associated with it.
+        if (const auto& displayId = getGlobalMonitorDisplayIdLocked(connection->inputChannel);
+            displayId) {
+            target.displayTransform = getTransformLocked(displayId.value());
+            target.setDefaultPointerTransform(target.displayTransform);
+        }
     }
     target.inputChannel = connection->inputChannel;
     target.flags = InputTarget::Flags::DISPATCH_AS_IS;
@@ -6975,6 +6984,18 @@ sp<WindowInfoHandle> InputDispatcher::findWallpaperWindowBelow(
         }
     }
     return nullptr;
+}
+
+std::optional<int32_t> InputDispatcher::getGlobalMonitorDisplayIdLocked(
+        const std::shared_ptr<InputChannel>& inputChannel) {
+    for (const auto& [displayId, monitors] : mGlobalMonitorsByDisplay) {
+        for (const Monitor& monitor : monitors) {
+            if (monitor.inputChannel == inputChannel) {
+                return displayId;
+            }
+        }
+    }
+    return std::nullopt;
 }
 
 } // namespace android::inputdispatcher
